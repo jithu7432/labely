@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net9.0</TargetFramework>
@@ -8,6 +8,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="SkiaSharp" Version="3.119.0" />
+		<PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies " Version="3.119.0" />
 	</ItemGroup>
 
 </Project>
