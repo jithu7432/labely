@@ -1,38 +1,98 @@
+using System.Text.Json.Serialization;
 using SkiaSharp;
 namespace Labely.Core;
 
+public record CanvasConfig {
+    [JsonPropertyName("width")]
+    public required int Width { get; set; }
+
+    [JsonPropertyName("height")]
+    public required int Height { get; set; }
+
+    [JsonPropertyName("color")]
+    public string Color { get; set; } = "#00000000";
+
+    [JsonPropertyName("border_offset")]
+    public int BorderOffset { get; set; }
+
+    [JsonPropertyName("border_pixels")]
+    public int BorderThickness { get; set; }
+
+    [JsonPropertyName("border_color")]
+    public string BorderColor { get; set; } = "#FFFFFFFF";
+
+}
+
+public record struct LabelConfig {
+    [JsonPropertyName("canvas")]
+    public required CanvasConfig Canvas { get; set; }
+}
+
 public static class Drawer {
-    public static void Draw() {
-
-
-        var info = new SKImageInfo(1200, 1800);
+    public static void DrawLabel(in LabelConfig lc) {
+        var info = new SKImageInfo(lc.Canvas.Width, lc.Canvas.Height);
         using var surface = SKSurface.Create(info);
 
-        SKPaint paint;
-
+        // Set canvas background
         var canvas = surface.Canvas;
-        canvas.Clear(SKColors.AntiqueWhite);
-        DrawBorder(canvas, 10);
+        canvas.Clear(SKColor.Parse(lc.Canvas.Color));
 
-        var point = new SKPoint(canvas.LocalClipBounds.Width/2, canvas.LocalClipBounds.Height/2);
-        var font = new SKFont();
-        DrawText(canvas, Guid.NewGuid().ToString(), point, new SKFont(), new SKPaint());
+        // Draw margins
+        if (lc.Canvas.BorderThickness > 0) {
+            canvas.DrawRect(
+                    new SKRect(
+                        lc.Canvas.BorderOffset,
+                        lc.Canvas.BorderOffset,
+                        canvas.LocalClipBounds.Width - lc.Canvas.BorderOffset,
+                        canvas.LocalClipBounds.Height - lc.Canvas.BorderOffset
+                    ),
+                    new SKPaint() {
+                        Color = SKColor.Parse(lc.Canvas.BorderColor),
+                        IsStroke = true,
+                        StrokeWidth = lc.Canvas.BorderThickness,
+                        StrokeCap = SKStrokeCap.Round
+                    }
+                );
+        }
 
-        // save the file
+        //
+        // var paint = new SKPaint() {
+        //     Color = SKColors.DarkGreen, StrokeWidth = 10
+        // };
+        //
+        // const int offset = 50;
+        //
+        //
+        //
+        // var point = new SKPoint(canvas.LocalClipBounds.Width / 2, canvas.LocalClipBounds.Height / 2);
+        // var font = new SKFont(SKTypeface.FromFamilyName("Times New Roman"), 50);
+        // canvas.DrawText(Guid.NewGuid().ToString(), point, SKTextAlign.Center, font, paint);
+        //
+        //
+        // var a = new SKPoint(offset, canvas.LocalClipBounds.Height / 2 - 200);
+        // var b = new SKPoint(canvas.LocalClipBounds.Width - offset, canvas.LocalClipBounds.Height / 2 - 200);
+        // canvas.DrawLine(a, b, paint);
+        //
+        // a = new SKPoint(offset, canvas.LocalClipBounds.Height / 2 + 200);
+        // b = new SKPoint(canvas.LocalClipBounds.Width - offset, canvas.LocalClipBounds.Height / 2 + 200);
+        // canvas.DrawLine(a, b, paint);
+        //
+        //
+        //
+        // point.Offset(new SKPoint(-400, -400));
+        // canvas.DrawText("PACKAGE DETAILS: ", point, SKTextAlign.Left, font, paint);
+        //
+        // point.Offset(new SKPoint(0, +400));
+        // point.Offset(new SKPoint(0, +400));
+        // canvas.DrawText("FROM: ", point, SKTextAlign.Left, font, paint);
+        //
+        // point.Offset(new SKPoint(0, +400));
+        // canvas.DrawText("TO: ", point, SKTextAlign.Left, font, paint);
+
+        // Save for DEBUG purposes
         using var image = surface.Snapshot();
-        using var data = image.Encode(SKEncodedImageFormat.Png, 100);
+        using var data = image.Encode(SKEncodedImageFormat.Png, 1);
         using var stream = File.OpenWrite("output.png");
         data.SaveTo(stream);
-    }
-
-    private static void DrawText(SKCanvas canvas, string text, SKPoint point, SKFont font, SKPaint paint) {
-        canvas.DrawText(text, point, SKTextAlign.Center, font, paint);
-    }
-
-    private static void DrawBorder(SKCanvas canvas, float offset) {
-        canvas.Clear(SKColors.Black);
-        var rect = new SKRect(offset, offset, canvas.LocalClipBounds.Width - offset, canvas.LocalClipBounds.Height - offset);
-        var paint = new SKPaint() { Color = SKColors.White, IsStroke = false };
-        canvas.DrawRect(rect, paint);
     }
 }

@@ -1,0 +1,10 @@
+{
+  "canvas": {
+    "width": 1200,
+    "height": 1800,
+    "color": "#8C968F",
+    "border_offset": 20,
+    "border_pixels": 5,
+    "border_color": "#0000FF"
+  }
+}

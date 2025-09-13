@@ -8,6 +8,6 @@ build:
 
 .PHONY: run
 run:
-	dotnet run --no-restore --project src/Labely.Console/Labely.Console.csproj
+	dotnet run --no-restore --project src/Labely.Konsole/Labely.Konsole.csproj
 
 
