@@ -1,6 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using SkiaSharp;
 using SkiaSharp.QrCode;
 namespace Labely.Core;
@@ -12,32 +9,17 @@ public static class Drawer {
         using var surface = SKSurface.Create(info);
 
         // Set canvas background
-        var canvas = surface.Canvas;
-        canvas.Clear(SKColor.Parse(lc.Canvas.Color));
-
-
-        foreach (var element in lc.Elements) {
-            switch (element.Kind) {
-                case "qr":
-                    using (var bitmap = new SKBitmap(element.Size, element.Size)) {
-                        using (var cv = new SKCanvas(bitmap)) {
-                            var qr = new QRCodeGenerator().CreateQrCode(element.Url, ECCLevel.H);
-                            cv.Render(qr, element.Size, element.Size, SKColors.Transparent, SKColor.Parse(element.ForegroundColor), SKColor.Parse(element.BackgroundColor));
-                        }
-                        canvas.DrawBitmap(bitmap, element.X, element.Y);
-                    }
-                    break;
-            }
-        }
+        var parentC = surface.Canvas;
+        parentC.Clear(SKColor.Parse(lc.Canvas.Color));
 
         // Draw margins
         if (lc.Canvas.BorderThickness > 0) {
-            canvas.DrawRect(
+            parentC.DrawRect(
                     new SKRect(
                         lc.Canvas.BorderOffset,
                         lc.Canvas.BorderOffset,
-                        canvas.LocalClipBounds.Width - lc.Canvas.BorderOffset,
-                        canvas.LocalClipBounds.Height - lc.Canvas.BorderOffset
+                        parentC.LocalClipBounds.Width - lc.Canvas.BorderOffset,
+                        parentC.LocalClipBounds.Height - lc.Canvas.BorderOffset
                     ),
                     new SKPaint() {
                         Color = SKColor.Parse(lc.Canvas.BorderColor),
@@ -47,6 +29,33 @@ public static class Drawer {
                     }
                 );
         }
+
+        using var bitmap = new SKBitmap(lc.Canvas.Width - 2 * lc.Canvas.BorderAll, lc.Canvas.Height - 2 * lc.Canvas.BorderAll);
+        var canvas = new SKCanvas(bitmap);
+
+        SKFont font;
+        SKPaint paint;
+        foreach (var element in lc.Elements) {
+            switch (element.Kind) {
+                case "qr":
+                    using (var bb = new SKBitmap(element.Size, element.Size)) {
+                        using (var cv = new SKCanvas(bb)) {
+                            var qr = new QRCodeGenerator().CreateQrCode(element.Url, ECCLevel.H);
+                            cv.Render(qr, element.Size, element.Size, SKColors.Transparent, SKColor.Parse(element.ForegroundColor), SKColor.Parse(element.BackgroundColor));
+                        }
+                        canvas.DrawBitmap(bb, element.X, element.Y);
+                    }
+                    break;
+                case "text":
+                    font = new SKFont(SKTypeface.FromFamilyName("Times New Roman"), element.Size);
+                    paint = new() { IsStroke = false };
+                    canvas.DrawText(element.Value, element.X, element.Y, SKTextAlign.Left, font, paint);
+                    break;
+            }
+        }
+
+        parentC.DrawBitmap(bitmap, lc.Canvas.BorderAll, lc.Canvas.BorderAll);
+
 
         //
         // var paint = new SKPaint() {

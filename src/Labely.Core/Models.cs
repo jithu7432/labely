@@ -16,6 +16,8 @@ public record CanvasConfig {
     [JsonPropertyName("border_offset")]
     public int BorderOffset { get; set; }
 
+    public int BorderAll => BorderOffset + BorderThickness;
+
     [JsonPropertyName("border_pixels")]
     public int BorderThickness { get; set; }
 
@@ -39,6 +41,9 @@ public record ElementConfig {
 
     [JsonPropertyName("url")]
     public string Url { get; set; } = string.Empty;
+
+    [JsonPropertyName("value")]
+    public string Value { get; set; } = string.Empty;
 
     [JsonPropertyName("bg")]
     public string BackgroundColor { get; set; } = "#FFFFFF";

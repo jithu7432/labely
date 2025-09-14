@@ -10,11 +10,32 @@
   "elements": [
     {
       "kind": "qr",
-      "x": 0,
-      "y": 0,
       "size": 200,
-      "url": "https://duckduckgo.com/",
-      "fg": "#000000"
+      "url": "https://duckduckgo.com/"
+    },
+    {
+      "kind": "qr",
+      "size": 200,
+      "x": 950,
+      "y": 5,
+      "fg": "#FFFF00",
+      "bg": "#0000FF",
+      "url": "https://google.com/"
+    },
+    {
+      "kind": "text",
+      "x": 10,
+      "y": 500,
+      "size": 40,
+      "value": "TO: "
+    },
+    {
+      "kind": "text",
+      "x": 10,
+      "y": 600,
+      "size": 40,
+      "value": "FROM: "
     }
+
   ]
 }
