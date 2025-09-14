@@ -36,6 +36,12 @@ public record ElementConfig {
     [JsonPropertyName("y")]
     public int Y { get; set; } = 0;
 
+    [JsonPropertyName("x1")]
+    public int X1 { get; set; } = 0;
+
+    [JsonPropertyName("y1")]
+    public int Y1 { get; set; } = 0;
+
     [JsonPropertyName("width")]
     public int Width { get; set; } = 0;
 

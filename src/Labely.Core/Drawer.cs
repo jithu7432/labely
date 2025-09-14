@@ -52,11 +52,14 @@ public static class Drawer {
                     paint = new() { IsStroke = false };
                     canvas.DrawText(element.Value, element.X, element.Y, SKTextAlign.Left, font, paint);
                     break;
-
                 case "bar":
                     var bar = new Barcode(element.Value, true, element.Width, element.Height);
                     var map = SKBitmap.Decode(bar.GetByteArray());
                     canvas.DrawBitmap(map, element.X, element.Y);
+                    break;
+                case "line":
+                    paint = new() { IsStroke = false, StrokeWidth = element.Width };
+                    canvas.DrawLine(element.X, element.Y, element.X1, element.Y1, paint);
                     break;
             }
         }

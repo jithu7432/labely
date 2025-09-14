@@ -14,20 +14,11 @@
       "value": "https://duckduckgo.com/"
     },
     {
-      "kind": "qr",
-      "size": 200,
-      "x": 950,
-      "y": 5,
-      "fg": "#FFFF00",
-      "bg": "#0000FF",
-      "value": "https://google.com/"
-    },
-    {
       "kind": "text",
       "x": 20,
       "y": 300,
       "size": 40,
-      "value": "FROM: "
+      "value": "FROM:"
     },
     {
       "kind": "text",
@@ -43,6 +34,14 @@
       "width": 500,
       "height": 100,
       "value": "978-0-306-40615-7"
+    },
+    {
+      "kind": "line",
+      "x": 100,
+      "y": 800,
+      "x1": 600,
+      "y1": 800,
+      "width": 5
     }
 
   ]
