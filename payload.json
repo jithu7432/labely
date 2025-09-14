@@ -2,9 +2,19 @@
   "canvas": {
     "width": 1200,
     "height": 1800,
-    "color": "#8C968F",
+    "color": "#FFFFFF",
     "border_offset": 20,
     "border_pixels": 5,
-    "border_color": "#0000FF"
-  }
+    "border_color": "#000000"
+  },
+  "elements": [
+    {
+      "kind": "qr",
+      "x": 0,
+      "y": 0,
+      "size": 200,
+      "url": "https://duckduckgo.com/",
+      "fg": "#000000"
+    }
+  ]
 }

@@ -1,32 +1,10 @@
+using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using SkiaSharp;
+using SkiaSharp.QrCode;
 namespace Labely.Core;
 
-public record CanvasConfig {
-    [JsonPropertyName("width")]
-    public required int Width { get; set; }
-
-    [JsonPropertyName("height")]
-    public required int Height { get; set; }
-
-    [JsonPropertyName("color")]
-    public string Color { get; set; } = "#00000000";
-
-    [JsonPropertyName("border_offset")]
-    public int BorderOffset { get; set; }
-
-    [JsonPropertyName("border_pixels")]
-    public int BorderThickness { get; set; }
-
-    [JsonPropertyName("border_color")]
-    public string BorderColor { get; set; } = "#FFFFFFFF";
-
-}
-
-public record struct LabelConfig {
-    [JsonPropertyName("canvas")]
-    public required CanvasConfig Canvas { get; set; }
-}
 
 public static class Drawer {
     public static void DrawLabel(in LabelConfig lc) {
@@ -36,6 +14,21 @@ public static class Drawer {
         // Set canvas background
         var canvas = surface.Canvas;
         canvas.Clear(SKColor.Parse(lc.Canvas.Color));
+
+
+        foreach (var element in lc.Elements) {
+            switch (element.Kind) {
+                case "qr":
+                    using (var bitmap = new SKBitmap(element.Size, element.Size)) {
+                        using (var cv = new SKCanvas(bitmap)) {
+                            var qr = new QRCodeGenerator().CreateQrCode(element.Url, ECCLevel.H);
+                            cv.Render(qr, element.Size, element.Size, SKColors.Transparent, SKColor.Parse(element.ForegroundColor), SKColor.Parse(element.BackgroundColor));
+                        }
+                        canvas.DrawBitmap(bitmap, element.X, element.Y);
+                    }
+                    break;
+            }
+        }
 
         // Draw margins
         if (lc.Canvas.BorderThickness > 0) {
