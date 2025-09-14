@@ -11,7 +11,7 @@
     {
       "kind": "qr",
       "size": 200,
-      "url": "https://duckduckgo.com/"
+      "value": "https://duckduckgo.com/"
     },
     {
       "kind": "qr",
@@ -20,21 +20,29 @@
       "y": 5,
       "fg": "#FFFF00",
       "bg": "#0000FF",
-      "url": "https://google.com/"
+      "value": "https://google.com/"
     },
     {
       "kind": "text",
-      "x": 10,
-      "y": 500,
+      "x": 20,
+      "y": 300,
+      "size": 40,
+      "value": "FROM: "
+    },
+    {
+      "kind": "text",
+      "x": 20,
+      "y": 600,
       "size": 40,
       "value": "TO: "
     },
     {
-      "kind": "text",
-      "x": 10,
+      "kind": "bar",
+      "x": 100,
       "y": 600,
-      "size": 40,
-      "value": "FROM: "
+      "width": 500,
+      "height": 100,
+      "value": "978-0-306-40615-7"
     }
 
   ]

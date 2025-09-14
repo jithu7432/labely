@@ -1,3 +1,4 @@
+using NetBarcode;
 using SkiaSharp;
 using SkiaSharp.QrCode;
 namespace Labely.Core;
@@ -40,7 +41,7 @@ public static class Drawer {
                 case "qr":
                     using (var bb = new SKBitmap(element.Size, element.Size)) {
                         using (var cv = new SKCanvas(bb)) {
-                            var qr = new QRCodeGenerator().CreateQrCode(element.Url, ECCLevel.H);
+                            var qr = new QRCodeGenerator().CreateQrCode(element.Value, ECCLevel.H);
                             cv.Render(qr, element.Size, element.Size, SKColors.Transparent, SKColor.Parse(element.ForegroundColor), SKColor.Parse(element.BackgroundColor));
                         }
                         canvas.DrawBitmap(bb, element.X, element.Y);
@@ -50,6 +51,12 @@ public static class Drawer {
                     font = new SKFont(SKTypeface.FromFamilyName("Times New Roman"), element.Size);
                     paint = new() { IsStroke = false };
                     canvas.DrawText(element.Value, element.X, element.Y, SKTextAlign.Left, font, paint);
+                    break;
+
+                case "bar":
+                    var bar = new Barcode(element.Value, true, element.Width, element.Height);
+                    var map = SKBitmap.Decode(bar.GetByteArray());
+                    canvas.DrawBitmap(map, element.X, element.Y);
                     break;
             }
         }
@@ -93,7 +100,7 @@ public static class Drawer {
 
         // Save for DEBUG purposes
         using var image = surface.Snapshot();
-        using var data = image.Encode(SKEncodedImageFormat.Png, 1);
+        using var data = image.Encode(SKEncodedImageFormat.Webp, 100);
         using var stream = File.OpenWrite("output.png");
         data.SaveTo(stream);
     }
